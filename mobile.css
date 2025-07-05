@@ -372,6 +372,16 @@ padding-left: 0px;
     flex-direction: column;
     padding: 25px;
     }
-}
+     .slider-arrow img{
+    width: 20px;
+ }
+ #slider-display {
+    position: relative;
+    height: 500px;
   
+}
+.slider-container{
+    margin-bottom: 40px;
+}
+}
   

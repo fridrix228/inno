@@ -181,15 +181,7 @@
                         </div>
                         
                     </div>
-                </div> <a href="" class="button">
-                                        <div class="buttonmain">
-                                            Подробнее
-                                        </div>
-                                        <div class="arrow">
-                                            →
-                                        </div>
-                                    </a>
-
+                </div> 
             </div>
             <div class="page4 reveal" id="page3">
                 <div class="page4cont">
@@ -253,9 +245,6 @@
                 <a href="" class="button" id="sale">
                     <div class="buttonmain">
                         Заказать
-                    </div>
-                    <div class="arrow">
-                        →
                     </div>
                 </a>
             </div>
@@ -439,7 +428,13 @@
     const slides = document.querySelectorAll('.slide');
     const nav = document.querySelectorAll('.page5nav1');
     const len = slides.length;
-    let current = 0;                                     // центральный индекс
+    let current = 0;           
+    let centerScale = window.matchMedia("(max-width: 768px)").matches ? 1.5 : 3.3;                          // центральный индекс
+
+    window.addEventListener('resize', () => {
+  centerScale = window.matchMedia("(max-width: 768px)").matches ? 1.5 : 3.3;
+  render(); // перерисовка при смене размера окна
+});
 
     /* ---------- рендер --------------------------------------------------- */
     function render() {
@@ -447,7 +442,7 @@
             let d = (i - current + len) % len;                       // 0..5
             if (d > len / 2) d -= len;                              // теперь в -3..2
             const off = d * spacing;
-            const scale = d === 0 ? 3.3 : 0.75;
+            const scale = d === 0 ? centerScale : 0.75;
             const blur = d === 0 ? 'none' : 'blur(3px) brightness(0.7)';
             const opac = Math.abs(d) <= 1 ? 1 : 0;                  // показываем только 3 слайда
             const z = d === 0 ? 2 : 1;
@@ -498,7 +493,7 @@
         el.classList.remove('gallery-ready');
         requestAnimationFrame(() => el.classList.add('gallery-ready'));
     }
-
+    
     /* ---------- галерея ------------------------------------------------- */
     const groupSize = 4, groupsTotal = Math.ceil(TOTAL / groupSize);
 
@@ -556,10 +551,7 @@
 
     /* ---------- авто‑карусель ------------------------------------------ */
     let timer;
-    function resetTimer() {
-        clearInterval(timer);
-        timer = setInterval(() => { groupIdx = (groupIdx + 1) % groupsTotal; renderGallery(); }, 5000);
-    }
+  
     dots.forEach((dot, i) => dot.onclick = () => { groupIdx = i; renderGallery(); resetTimer(); });
 
     /* ---------- init ---------------------------------------------------- */
