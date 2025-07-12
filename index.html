@@ -31,15 +31,14 @@
         <div class="headb"></div>
         <header class="reveal-delayed">
             <nav class="header">
+                <a href="#page0" class="logo"><img src="img/Group 20.svg" alt=""></a>
                 <a href="#page1">О компании</a>
                 <a href="#page2">Задачи</a>
                 <a href="#page4">Ассортимент</a>
-
-                <a href="#page0" class="logo"><img src="img/Group 20.svg" alt=""></a>
-
                 <a href="#page5">Преимущества</a>
-                <a href="#page6">Связь</a>
+                <a href="#page6">Cотрудничество</a>
                 <a href="#page7">Фото</a>
+                <a href="#page8">Контакты</a>
             </nav>
 
         </header>
@@ -59,8 +58,9 @@
                 <a href="#page2">Задачи</a>
                 <a href="#page4">Ассортимент</a>
                 <a href="#page5">Преимущества</a>
-                <a href="#page6">Связь</a>
+                <a href="#page6">Cотрудничество</a>
                 <a href="#page7">Фото</a>
+                <a href="#page8">Контакты</a>
             </nav>
         </header>
 
@@ -86,7 +86,7 @@
                                     →
                                 </div>
                             </a> -->
-                        </div>
+                        </div >
 
                         <div class="center">
                             <video src="img/tooth1.webm" autoplay loop muted playsinline preload="none"
@@ -103,7 +103,7 @@
             </div>
             <div class="page2 reveal">
                 <div class="page2cont">
-                    <h1 class="metallic-text">О НАС</h1>
+                    <h1 class="metallic-text" id="page1">О НАС</h1>
                     <div class="blockp2">
                         <p align="justify">Innowhite — ведущий разработчик и производитель отбеливающей косметики для
                             полости рта. Мы создаём инновационные продукты, которые не только эффективно отбеливают
@@ -300,15 +300,12 @@
                         <br> <br>
                         Если вы представляете бизнес и заинтересованы в сотрудничестве, мы предлагаем уникальные возможности B2B. Наша продукция отличается высоким качеством и эффективностью, что делает её идеальным выбором для стоматологических клиник, салонов красоты, розничных сетей и дистрибьюторов.
                      <br> <br>
-                    Для получения дополнительной информации о наших B2B-предложениях, условиях сотрудничества или запросов на оптовые закупки, пожалуйста, свяжитесь с нами:
+                    Для получения дополнительной информации о наших B2B-предложениях, условиях сотрудничества или запросов на оптовые закупки, пожалуйста, свяжитесь с нами.
                     </p>
                 </div>
-                <a href="" class="button">
+                <a href="#page8" class="button">
                     <div class="buttonmain">
                         Связаться
-                    </div>
-                    <div class="arrow">
-                        →
                     </div>
                 </a>
             </div>
@@ -362,14 +359,14 @@
 
                         </div>
                     </div>
-                    <div class="footer-links">
+                    <div class="footer-links" id="page8">
                         <div>
                             <h4>Разделы</h4>
                             <a href="#page1">О компании</a>
                             <a href="#page2">Задачи</a>
                             <a href="#page3">Ассортимент</a>
                             <a href="#page4">Преимущества</a>
-                            <a href="#page5">Связь</a>
+                            <a href="#page5">Cотрудничество</a>
                             <a href="#page6">Фото</a>
                         </div>
                         <div>
@@ -470,6 +467,8 @@
     /* ---------- настройки --------------------------------------------- */
     const TOTAL = 16;                       // всего фото
     const full = i => `img/photo${i}.jpg`;     // путь к полно‑размерному
+    /* true, если устройство поддерживает касания */
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     /* ---------- DOM ---------------------------------------------------- */
     const gLeft = document.querySelector('.gallery-left');
@@ -489,25 +488,45 @@
 
     /* ---------- helpers ------------------------------------------------- */
     function setBg(el, url) { el.style.backgroundImage = `url(${url})`; }
-    function fadeIn(el) {
-        el.classList.remove('gallery-ready');
-        requestAnimationFrame(() => el.classList.add('gallery-ready'));
-    }
-    
+function fadeIn(el){
+    el.classList.remove('gallery-ready');
+    el.style.opacity = 0;
+    requestAnimationFrame(() => {
+        el.classList.add('gallery-ready');
+        el.style.opacity = 1;
+    });
+}
     /* ---------- галерея ------------------------------------------------- */
     const groupSize = 4, groupsTotal = Math.ceil(TOTAL / groupSize);
 
-    function renderGallery() {
-        const start = groupIdx * groupSize;          // 0,4,8...
-        const indices = Array.from({ length: groupSize }, (_, i) => (start + i) % TOTAL + 1);
+    function renderGallery(animate = true) {
+    const elems = [gLeft, gTop, ...gSmall];          // все 4 блока
 
-        setBg(gLeft, full(indices[0])); gLeft.dataset.id = indices[0];
-        setBg(gTop, full(indices[1])); gTop.dataset.id = indices[1];
-        gSmall.forEach((el, i) => { setBg(el, full(indices[i + 2])); el.dataset.id = indices[i + 2]; });
+    /* 1. Если нужно мгновенно — СНАЧАЛА убираем transition */
+    if (!animate) elems.forEach(el => el.style.transition = 'none');
 
-        [gLeft, gTop, ...gSmall].forEach(fadeIn);
-        dots.forEach((d, i) => d.classList.toggle('active', i === groupIdx));
+    /* 2. Обновляем изображения */
+    const start   = groupIdx * groupSize;
+    const ids     = Array.from({length: groupSize}, (_, i) => (start + i) % TOTAL + 1);
+
+    setBg(gLeft,  full(ids[0])); gLeft.dataset.id = ids[0];
+    setBg(gTop,   full(ids[1])); gTop.dataset.id = ids[1];
+    gSmall.forEach((el, i) => { setBg(el, full(ids[i + 2])); el.dataset.id = ids[i + 2]; });
+
+    /* 3. Анимация или «грубая» подстановка */
+    if (animate) {
+        elems.forEach(fadeIn);                       // плавный fade-in
     }
+
+    /* 4. Возвращаем transition обратно (после рейфлоу) */
+    if (!animate) {
+        void gLeft.offsetWidth;                      // force-reflow
+        elems.forEach(el => el.style.transition = '');
+    }
+
+    dots.forEach((d, i) => d.classList.toggle('active', i === groupIdx));
+}
+
 
     /* ---------- lightbox ----------------------------------------------- */
     function openLB(id) {
@@ -552,7 +571,29 @@
     /* ---------- авто‑карусель ------------------------------------------ */
     let timer;
   
-    dots.forEach((dot, i) => dot.onclick = () => { groupIdx = i; renderGallery(); resetTimer(); });
+    /* ---- плавный fade-out / fade-in ----- */
+const galleryWrap = document.querySelector('.gallery');
+const FADE = 400;                        // время cross-fade в мс
+
+dots.forEach((dot, i) => dot.onclick = () => {
+    if (i === groupIdx) return;
+
+    if (isTouchDevice) {          // 📱 телефон
+        groupIdx = i;
+        renderGallery(false);     // МГНОВЕННО
+    } else {                      // 🖥 десктоп
+        galleryWrap.classList.add('fade');
+        setTimeout(() => {
+            groupIdx = i;
+            renderGallery(true);  // ПЛАВНО
+            galleryWrap.classList.remove('fade');
+        }, FADE);
+    }
+
+    resetTimer?.();               // если таймер есть
+});
+
+
 
     /* ---------- init ---------------------------------------------------- */
     renderGallery(); resetTimer();
@@ -694,9 +735,10 @@
 
     /* ——— галерея ——— */
     const gallery = document.querySelector('.gallery');
-    swipe(gallery,
-        () => { groupIdx = (groupIdx + 1) % groupsTotal; renderGallery(); resetTimer(); },
-        () => { groupIdx = (groupIdx - 1 + groupsTotal) % groupsTotal; renderGallery(); resetTimer(); });
+swipe(gallery,
+  () => { groupIdx = (groupIdx + 1) % groupsTotal; renderGallery(false); resetTimer?.(); },
+  () => { groupIdx = (groupIdx - 1 + groupsTotal) % groupsTotal; renderGallery(false); resetTimer?.(); }
+);
 
 </script>
 

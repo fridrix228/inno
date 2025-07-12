@@ -1201,3 +1201,31 @@ h3 {
 #mobas{
     display: none;
 }
+
+.footer-social img{
+    width: 25px;
+}
+
+.gallery-left,
+.gallery-top,
+.gallery-small {
+    transition: background-image 0.3s ease-in-out, transform 0.4s ease, opacity 0.4s ease;
+}
+.gallery-ready {
+    transition: opacity 0.5s ease;
+}
+/* Обёртка всей галереи */
+.gallery{
+    transition: opacity .4s ease; /* 0,4 с на затемнение/проявление */
+}
+
+.gallery.fade{
+    opacity: 0;                   /* полностью «гасим» галерею */
+}
+a, button, .page5nav1{
+    -webkit-tap-highlight-color: transparent;
+}
+a:focus, button:focus,
+a:focus-visible, button:focus-visible {
+    outline: none;
+}
