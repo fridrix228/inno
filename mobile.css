@@ -383,5 +383,11 @@ padding-left: 0px;
 .slider-container{
     margin-bottom: 40px;
 }
+.burger{
+    -webkit-tap-highlight-color: transparent;
+}
 }
   
+.burger, .dot{
+    -webkit-tap-highlight-color: transparent;
+}
