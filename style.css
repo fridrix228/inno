@@ -1222,7 +1222,7 @@ h3 {
 .gallery.fade{
     opacity: 0;                   /* полностью «гасим» галерею */
 }
-a, button, .page5nav1, .gallery{
+a, button, .page5nav1, .gallery, .burger{
     -webkit-tap-highlight-color: transparent;
 }
 a:focus, button:focus,
